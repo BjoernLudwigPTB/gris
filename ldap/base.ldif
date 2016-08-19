@@ -1,0 +1,38 @@
+dn: dc=nodomain
+dc: nodomain
+o: institut
+objectclass: organization
+objectclass: dcObject
+
+dn: cn=admin,dc=nodomain
+objectClass: simpleSecurityObject
+objectClass: organizationalRole
+cn: admin
+userPassword: {SSHA}aeCV4qb+y4f6mfuD2Z/NhV2oLau9Cr+S 
+description: LDAP administrator
+
+
+dn: cn=guest,dc=nodomain
+objectClass: simpleSecurityObject
+objectclass: organizationalRole
+description: LDAP Read-only Access
+userPassword: {SSHA}o0yaQinJvrFzXJlrG41DZTD11s+okrUE
+
+dn: ou=kommunikation,dc=nodomain
+objectClass: organizationalUnit
+ou: kommunikation
+
+dn: cn=Max Mustermann,ou=kommunikation,dc=nodomain
+cn: Max Mustermann
+facsimiletelephonenumber: +49(000)00000-0000
+givenname: Max
+l: Köln
+mail: max.musterman@nodomain.org
+objectclass: inetOrgPerson
+postalcode: 50667
+roomnumber: C000
+sn: Mustermann
+street: Musterhausen
+telephonenumber: +49(000)00000-0000
+uid: muster
+userpassword: {SSHA}e8WK+jB6fwhhvFCAAi1HeFhoOWrjpezh
