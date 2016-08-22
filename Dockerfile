@@ -73,7 +73,7 @@ COPY ldap/base.ldif /tmp/base.ldif
 COPY ldap/disable_anon_bind.ldif /tmp/disable_anon_bind.ldif
 COPY database/schema.sql /tmp/schema.sql
 
-git clone https://git.gesis.org/gris/gris-ose.git /var/www
+RUN git clone https://git.gesis.org/gris/gris-ose.git /var/www/gris
 
 RUN service mysql start \ 
 && mysql --user=root --password=$MYSQL_ROOT_PASSWORD -e 'CREATE DATABASE gris_model CHARACTER SET utf8 COLLATE utf8_general_ci' \
@@ -85,7 +85,7 @@ RUN service slapd start \
 RUN service slapd start \
 && ldapadd -Q -Y EXTERNAL -H ldapi:/// -f /tmp/disable_anon_bind.ldif -w $LDAP_ROOT_PASSWORD; exit 0
 
-#RUN sed -i "s|$(grep -i 'DocumentRoot' /etc/apache2/sites-enabled/000-default.conf | cut -d' ' -f2)|/var/www/gris|" /etc/apache2/sites-enabled/000-default.conf
+RUN sed -i "s|$(grep -i 'DocumentRoot' /etc/apache2/sites-enabled/000-default.conf | cut -d' ' -f2)|/var/www/gris|" /etc/apache2/sites-enabled/000-default.conf
 
 
 
