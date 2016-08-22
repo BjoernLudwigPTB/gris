@@ -17,6 +17,7 @@ RUN echo "mysql-server mysql-server/root_password password $MYSQL_ROOT_PASSWORD"
 	&& echo "mysql-server mysql-server/root_password_again password $MYSQL_ROOT_PASSWORD" | debconf-set-selections 
 
 RUN apt update && apt install -y \
+	git \
 	vim \
 	apache2 \
 	php5 \
@@ -72,7 +73,7 @@ COPY ldap/base.ldif /tmp/base.ldif
 COPY ldap/disable_anon_bind.ldif /tmp/disable_anon_bind.ldif
 COPY database/schema.sql /tmp/schema.sql
 
-git clone https://git.gesis.org/gris/gris.git /var/www
+git clone https://git.gesis.org/gris/gris-ose.git /var/www
 
 RUN service mysql start \ 
 && mysql --user=root --password=$MYSQL_ROOT_PASSWORD -e 'CREATE DATABASE gris_model CHARACTER SET utf8 COLLATE utf8_general_ci' \

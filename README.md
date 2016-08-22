@@ -54,9 +54,9 @@ Install [Docker Toolbox](https://www.docker.com/products/docker-toolbox)
 
 Clone GRIS and switch to directory
 ```bash
-git clone https://git.gesis.org:80/gris/gris.git
+git clone https://git.gesis.org/gris/gris-docker.git
 
-cd gris
+cd gris-docker
 ```
 
 Build Docker
@@ -81,9 +81,9 @@ chmod u+x gris.sh
 
 Clone GRIS and switch to directory
 ```bash
-git clone https://git.gesis.org:80/gris/gris.git
+git clone https://git.gesis.org/gris/gris-docker.git
 
-cd gris
+cd gris-docker
 ```
 Build Docker
 ```bash
@@ -100,8 +100,6 @@ Replace MY_PASSWORD and MY_DOMAIN with your own.
 ### Run Docker
 
 ```bash
-cd gris
-
 docker run -dt --name=gris -p 8081:80 gris
 ```
 
