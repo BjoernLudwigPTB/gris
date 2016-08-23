@@ -1,6 +1,6 @@
 #!/bin/bash
 
-IMAGE_NAME="gris1"
+IMAGE_NAME="gris"
 
 start_services(){
 	docker exec -d $IMAGE_NAME service apache2 start
@@ -47,4 +47,7 @@ case "$1" in
 		;;
 	fix)
 		docker rm --force `docker ps -qa`
+		;;
+	update)
+		docker exec -d $IMAGE_NAME git --git-dir=/var/www/gris/.git --work-tree=/var/www/gris pull origin master
 esac
