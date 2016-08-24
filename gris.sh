@@ -29,7 +29,8 @@ case "$1" in
 		docker run -dt --name=$IMAGE_NAME -v $PWD/app:/var/www -p 8081:80 $IMAGE_NAME
                 start_services
 		;;
-	stop)
+	stop)	
+		docker commit -p gris gris
 		docker stop $IMAGE_NAME
 		docker rm $IMAGE_NAME
 		;;
