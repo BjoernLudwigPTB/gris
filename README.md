@@ -92,10 +92,10 @@ docker build -t gris \
 --build-arg LDAP_ROOT_PASSWORD=MY_PASSWORD \
 --build-arg PMA_USER_PASSWORD=MY_PASSWORD \
 --build-arg GRIS_DB_USER_PASSWORD=MY_PASSWORD \
---build-arg LDAP_DOMAIN=MY_DOMAIN \
+--build-arg LDAP_DOMAIN=nodomain \
 .
 ```
-Replace MY_PASSWORD and MY_DOMAIN with your own.
+Replace MY_PASSWORD with your own.
 
 ### Run Docker
 
