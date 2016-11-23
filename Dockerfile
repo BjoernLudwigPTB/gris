@@ -87,5 +87,5 @@ RUN service slapd start \
 
 RUN sed -i "s|$(grep -i 'DocumentRoot' /etc/apache2/sites-enabled/000-default.conf | cut -d' ' -f2)|/var/www/gris|" /etc/apache2/sites-enabled/000-default.conf
 
-
+RUN chown -R www-data:www-data /var/www/gris
 
