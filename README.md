@@ -103,7 +103,6 @@ Replace MY_PASSWORD with your own.
 docker run -dt --name=gris -p 8081:80 gris
 ```
 
-Replace MY_PATH with a valid local path to your web folder.
 
 ### Start services
 
