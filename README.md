@@ -77,6 +77,10 @@ chmod u+x gris.sh
 
 # Advanced
 
+### Video
+
+[Video] (https://gesisbox.gesis.org/index.php/s/pPFkHGqL1NZ8QJK)
+
 ### Build Docker
 
 Clone GRIS and switch to directory
