@@ -75,6 +75,12 @@ chmod u+x gris.sh
 ./gris.sh stop 
 ```
 
+### Credentials
+
+#### GRIS
+username: muster
+password: test123
+
 # Advanced
 
 ### Video
