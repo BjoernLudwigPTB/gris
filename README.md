@@ -77,7 +77,7 @@ chmod u+x gris.sh
 
 ### Credentials
 
-#### GRIS
+<u>GRIS</u>
 username: muster
 password: test123
 
