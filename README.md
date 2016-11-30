@@ -76,8 +76,7 @@ chmod u+x gris.sh
 ```
 
 ### Credentials
-
-<u>GRIS</u>
+GRIS
 username: muster
 password: test123
 
@@ -86,6 +85,7 @@ password: test123
 ### Video
 
 [Video] (https://gesisbox.gesis.org/index.php/s/pPFkHGqL1NZ8QJK)
+![Sample Video](https://gesisbox.gesis.org/index.php/s/pPFkHGqL1NZ8QJK/download)
 
 ### Build Docker
 
