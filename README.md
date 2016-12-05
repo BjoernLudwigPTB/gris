@@ -82,7 +82,7 @@ password: test123
 
 # Advanced
 
-![Video](https://gesisbox.gesis.org/index.php/s/BVyAQXkvSCH08Kg/download?path=%2F&files=gris-docker.webm)
+![](https://gesisbox.gesis.org/index.php/s/BVyAQXkvSCH08Kg/download?path=%2F&files=gris-docker.webm)
 
 ### Build Docker
 
