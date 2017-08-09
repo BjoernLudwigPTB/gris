@@ -55,7 +55,6 @@ Install [Docker Toolbox](https://www.docker.com/products/docker-toolbox)
 Clone GRIS and switch to directory
 ```bash
 git clone https://git.gesis.org/gris/gris-docker.git
-
 cd gris-docker
 ```
 
@@ -100,7 +99,6 @@ password: test123
 Clone GRIS and switch to directory
 ```bash
 git clone https://git.gesis.org/gris/gris-docker.git
-
 cd gris-docker
 ```
 Build Docker
