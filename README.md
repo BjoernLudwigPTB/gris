@@ -65,14 +65,24 @@ chmod u+x gris.sh
 ./gris.sh build
 ```
 
-### Start Docker
+### Start Container
 ```bash
 ./gris.sh start 
 ```
 
-### Stop Docker
+### Stop Container
 ```bash
 ./gris.sh stop 
+```
+
+### Remove Container
+```bash
+./gris.sh remove 
+```
+
+### Commit Container
+```bash
+./gris.sh remove 
 ```
 
 ### Credentials for GRIS
