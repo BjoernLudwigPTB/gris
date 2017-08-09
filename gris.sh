@@ -2,13 +2,6 @@
 
 IMAGE_NAME="gris"
 
-start_services(){
-	docker exec -d $IMAGE_NAME service apache2 start
-	docker exec -d $IMAGE_NAME service mysql start
-	docker exec -d $IMAGE_NAME service slapd start
-	docker exec -d $IMAGE_NAME chown -R www-data:www-data /var/www/gris
-}
-
 case "$1" in
 	build)
 		source config.sh
@@ -23,9 +16,7 @@ case "$1" in
 		;;
 	start)
 		docker run -dt --name=$IMAGE_NAME -p 8081:80 $IMAGE_NAME
-		start_services
 		;;
-
 	stop)	
 		docker commit -p gris gris
 		docker stop $IMAGE_NAME
@@ -33,11 +24,8 @@ case "$1" in
 	remove)
 		docker rm $IMAGE_NAME
 		;;
-	save)
-		docker stop $IMAGE_NAME
-		docker commit gris $IMAGE_NAME
-		docker start $IMAGE_NAME
-		start_services
+	commit)
+		docker commit -p gris $IMAGE_NAME
 		;;
 	update)
 		docker exec -d $IMAGE_NAME git --git-dir=/var/www/gris/.git --work-tree=/var/www/gris pull origin master
