@@ -25,14 +25,10 @@ case "$1" in
 		docker run -dt --name=$IMAGE_NAME -p 8081:80 $IMAGE_NAME
 		start_services
 		;;
-	linux)
-		docker run -dt --name=$IMAGE_NAME -v $PWD/app:/var/www -p 8081:80 $IMAGE_NAME
-                start_services
-		;;
+
 	stop)	
 		docker commit -p gris gris
 		docker stop $IMAGE_NAME
-		docker rm $IMAGE_NAME
 		;;
 	remove)
 		docker rm $IMAGE_NAME
@@ -42,12 +38,6 @@ case "$1" in
 		docker commit gris $IMAGE_NAME
 		docker start $IMAGE_NAME
 		start_services
-		;;
-	bash)
-		docker exec -ti $IMAGE_NAME bash
-		;;
-	fix)
-		docker rm --force `docker ps -qa`
 		;;
 	update)
 		docker exec -d $IMAGE_NAME git --git-dir=/var/www/gris/.git --work-tree=/var/www/gris pull origin master
