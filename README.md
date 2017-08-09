@@ -82,7 +82,7 @@ chmod u+x gris.sh
 
 ### Commit Container
 ```bash
-./gris.sh remove 
+./gris.sh commit
 ```
 
 ### Credentials for GRIS
