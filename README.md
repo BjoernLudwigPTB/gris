@@ -75,14 +75,15 @@ chmod u+x gris.sh
 ./gris.sh stop 
 ```
 
-### Credentials
-GRIS
+### Credentials for GRIS
+```bash
 username: muster
 password: test123
-
-# Advanced
+```
 
 ![](https://gesisbox.gesis.org/index.php/s/BVyAQXkvSCH08Kg/download?path=%2F&files=gris-docker.webm)
+
+# Advanced
 
 ### Build Docker
 
@@ -110,13 +111,3 @@ Replace MY_PASSWORD with your own.
 docker run -dt --name=gris -p 8081:80 gris
 ```
 
-
-### Start services
-
-```bash
-docker exec -d gris service apache2 start
-
-docker exec -d gris service mysql start
-
-docker exec -d gris service slapd start
-```
