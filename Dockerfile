@@ -1,4 +1,4 @@
-FROM debian:latest
+FROM debian:8.9
 
 MAINTAINER GRIS <admins-gesis-web@gesis.org>
 
@@ -91,3 +91,4 @@ RUN sed -i "s|$(grep -i 'DocumentRoot' /etc/apache2/sites-enabled/000-default.co
 
 RUN chown -R www-data:www-data /var/www/gris
 
+ENTRYPOINT service apache2 start && service mysql start && service slapd start && /bin/bash
