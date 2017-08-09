@@ -59,6 +59,7 @@ RUN service mysql start \
 RUN apt install -y slapd ldap-utils
 
 RUN echo exit 0 > /usr/sbin/policy-rc.d \
+    && ulimit -n 1024
 	&& echo "slapd slapd/root_password password $LDAP_ROOT_PASSWORD" | debconf-set-selections \
 	&& echo "slapd slapd/root_password_again password $LDAP_ROOT_PASSWORD" | debconf-set-selections \
 	&& echo "slapd slapd/internal/adminpw password $LDAP_ROOT_PASSWORD" | debconf-set-selections \
@@ -81,14 +82,12 @@ RUN service mysql start \
 && mysql --user=root --password=$MYSQL_ROOT_PASSWORD -e 'CREATE DATABASE gris_model CHARACTER SET utf8 COLLATE utf8_general_ci' \
 && mysql --user=root --password=$MYSQL_ROOT_PASSWORD gris_model < /tmp/schema.sql 
 
-RUN service slapd start \
-&& ldapadd -x -c  -D cn=admin,dc=$LDAP_DOMAIN -w $LDAP_ROOT_PASSWORD -f /tmp/base.ldif; exit 0 
-
-RUN service slapd start \
+RUN ulimit -n 1024 && service slapd start \
+&& ldapadd -x -c  -D cn=admin,dc=$LDAP_DOMAIN -w $LDAP_ROOT_PASSWORD -f /tmp/base.ldif; exit 0 \
 && ldapadd -Q -Y EXTERNAL -H ldapi:/// -f /tmp/disable_anon_bind.ldif -w $LDAP_ROOT_PASSWORD; exit 0
 
 RUN sed -i "s|$(grep -i 'DocumentRoot' /etc/apache2/sites-enabled/000-default.conf | cut -d' ' -f2)|/var/www/gris|" /etc/apache2/sites-enabled/000-default.conf
 
 RUN chown -R www-data:www-data /var/www/gris
 
-ENTRYPOINT service apache2 start && service mysql start && service slapd start && /bin/bash
+ENTRYPOINT service apache2 start && service mysql start && service slapd start && ulimit -n 1024 && /bin/bash
