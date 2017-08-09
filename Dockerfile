@@ -59,7 +59,7 @@ RUN service mysql start \
 RUN apt install -y slapd ldap-utils
 
 RUN echo exit 0 > /usr/sbin/policy-rc.d \
-    && ulimit -n 1024
+    && ulimit -n 1024 \
 	&& echo "slapd slapd/root_password password $LDAP_ROOT_PASSWORD" | debconf-set-selections \
 	&& echo "slapd slapd/root_password_again password $LDAP_ROOT_PASSWORD" | debconf-set-selections \
 	&& echo "slapd slapd/internal/adminpw password $LDAP_ROOT_PASSWORD" | debconf-set-selections \
