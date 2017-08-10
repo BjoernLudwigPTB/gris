@@ -90,6 +90,12 @@ username: muster
 password: test123
 ```
 
+### Service URLS
+```bash
+http://[IP]:[PORT]/phpmyadmin
+http://[IP]:[PORT]/phpldapadmin
+```
+
 ![](https://gesisbox.gesis.org/index.php/s/BVyAQXkvSCH08Kg/download?path=%2F&files=gris-docker.webm)
 
 # Advanced
