@@ -77,7 +77,8 @@ COPY ldap/disable_anon_bind.ldif /tmp/disable_anon_bind.ldif
 COPY database/schema.sql /tmp/schema.sql
 
 RUN git clone https://git.gesis.org/gris/gris-ose.git /var/www/gris \
-    && chown -R www-data:www-data /var/www/gris
+    && chown -R www-data:www-data /var/www/gris \
+    && sed -i "s/test123/$GRIS_DB_USER_PASSWORD/g" /var/www/gris/init/gris_init_example.inc
 
 RUN service mysql start \ 
 && mysql --user=root --password=$MYSQL_ROOT_PASSWORD -e 'CREATE DATABASE gris_model CHARACTER SET utf8 COLLATE utf8_general_ci' \
