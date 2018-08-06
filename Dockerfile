@@ -42,8 +42,8 @@ RUN echo "phpmyadmin phpmyadmin/dbconfig-install boolean true" | debconf-set-sel
 	&& echo "phpmyadmin phpmyadmin/reconfigure-webserver multiselect apache2" | debconf-set-selections \
 	&& dpkg-reconfigure phpmyadmin
 
-RUN service mysql start && \
-	gunzip -c /usr/share/doc/phpmyadmin/examples/create_tables.sql.gz | mysql --protocol=TCP  --user=root --password=$MYSQL_ROOT_PASSWORD \
+RUN service mysql start
+RUN gunzip -c /usr/share/doc/phpmyadmin/examples/create_tables.sql.gz | mysql --protocol=TCP  --user=root --password=$MYSQL_ROOT_PASSWORD \
 	&& gunzip -c /usr/share/doc/phpmyadmin/examples/config.sample.inc.php.gz > /etc/phpmyadmin/config.inc.php
 
 RUN sed -i '/controluser/s/^\/\///g' /etc/phpmyadmin/config.inc.php \
