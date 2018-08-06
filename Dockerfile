@@ -4,11 +4,11 @@ MAINTAINER Bjoern Ludwig <bjoern.ludwig@ptb.de>
 
 ENV DEBIAN_FRONTEND=noninteractive
 
-ARG MYSQL_ROOT_PASSWORD
-ARG LDAP_ROOT_PASSWORD
-ARG PMA_USER_PASSWORD
-ARG GRIS_DB_USER_PASSWORD
-ARG LDAP_DOMAIN
+ARG MYSQL_ROOT_PASSWORD=password
+ARG LDAP_ROOT_PASSWORD=password
+ARG PMA_USER_PASSWORD=password
+ARG GRIS_DB_USER_PASSWORD=password
+ARG LDAP_DOMAIN=password
 
 RUN echo "Europe/Berlin" > /etc/timezone \
 	&& dpkg-reconfigure -f noninteractive tzdata
