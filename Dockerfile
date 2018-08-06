@@ -13,7 +13,7 @@ ARG LDAP_DOMAIN=password
 RUN echo "Europe/Berlin" > /etc/timezone \
 	&& dpkg-reconfigure -f noninteractive tzdata
 	
-# RUN echo "deb http://ftp.halifax.rwth-aachen.de/debian/ jessie main"> /etc/apt/sources.list
+RUN echo "deb http://ftp.halifax.rwth-aachen.de/debian/ jessie main"> /etc/apt/sources.list
 
 RUN echo "mysql-server mysql-server/root_password password $MYSQL_ROOT_PASSWORD" | debconf-set-selections \
 	&& echo "mysql-server mysql-server/root_password_again password $MYSQL_ROOT_PASSWORD" | debconf-set-selections 
