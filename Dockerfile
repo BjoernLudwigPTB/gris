@@ -25,8 +25,7 @@ RUN apt-get update && apt install -y \
 	php5 \
 	php5-ldap \
 	php5-mysqlnd \
-	libapache2-mo
-	d-php5 \ 
+	libapache2-mod-php5 \ 
 	mysql-server 
 
 RUN a2enmod rewrite \
