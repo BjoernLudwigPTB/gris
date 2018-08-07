@@ -40,8 +40,7 @@ RUN apt-get install -y \
         phpldapadmin \
 		phpmyadmin
         
-RUN service mysql start \
-        && echo "phpmyadmin phpmyadmin/dbconfig-install boolean true" | debconf-set-selections \
+RUN echo "phpmyadmin phpmyadmin/dbconfig-install boolean true" | debconf-set-selections \
         && echo "phpmyadmin phpmyadmin/app-password-confirm password $MYSQL_ROOT_PASSWORD" | debconf-set-selections \
         && echo "phpmyadmin phpmyadmin/mysql/admin-pass password $MYSQL_ROOT_PASSWORD" | debconf-set-selections \
         && echo "phpmyadmin phpmyadmin/mysql/app-pass password $MYSQL_ROOT_PASSWORD" | debconf-set-selections \
