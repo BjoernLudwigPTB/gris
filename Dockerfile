@@ -47,7 +47,8 @@ RUN echo "phpmyadmin phpmyadmin/dbconfig-install boolean true" | debconf-set-sel
         && echo "phpmyadmin phpmyadmin/reconfigure-webserver multiselect apache2" | debconf-set-selections \
         && dpkg-reconfigure phpmyadmin
 
-RUN service mysql start \
+RUN chown -R mysql:mysql /var/lib/mysql \
+        && service mysql start \
         && gunzip -c /usr/share/doc/phpmyadmin/examples/create_tables.sql.gz | mysql --protocol=TCP  --user=root --password=$MYSQL_ROOT_PASSWORD \
         && gunzip -c /usr/share/doc/phpmyadmin/examples/config.sample.inc.php.gz > /etc/phpmyadmin/config.inc.php
 
@@ -57,7 +58,8 @@ RUN sed -i '/controluser/s/^\/\///g' /etc/phpmyadmin/config.inc.php \
         && sed -i "/controlpass/s/= '.*'/= '$PMA_USER_PASSWORD'/" /etc/phpmyadmin/config.inc.php \
         && sed -i "/DefaultDisplay/s/'vertical'/'horizontal'/g" /etc/phpmyadmin/config.inc.php
 
-RUN service mysql start \
+RUN chown -R mysql:mysql /var/lib/mysql \
+        && service mysql start \
         && mysql --user=root --password=$MYSQL_ROOT_PASSWORD -e "GRANT SELECT, INSERT, DELETE, UPDATE ON phpmyadmin.* TO 'pma'@'localhost' IDENTIFIED BY '$PMA_USER_PASSWORD'" \
         && mysql --user=root --password=$MYSQL_ROOT_PASSWORD -e "GRANT SELECT, INSERT, DELETE, UPDATE ON gris_model.* TO 'gris'@'localhost' IDENTIFIED BY '$GRIS_DB_USER_PASSWORD'"
 
