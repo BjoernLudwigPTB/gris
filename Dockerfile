@@ -8,7 +8,7 @@ ARG MYSQL_ROOT_PASSWORD=passwd
 ARG LDAP_ROOT_PASSWORD=passwd
 ARG PMA_USER_PASSWORD=passwd
 ARG GRIS_DB_USER_PASSWORD=passwd
-ARG LDAP_DOMAIN=passwd
+ARG LDAP_DOMAIN=ldapdomain
 
 RUN echo "Europe/Berlin" > /etc/timezone \
         && dpkg-reconfigure -f noninteractive tzdata
@@ -31,7 +31,8 @@ RUN apt-get update && apt-get install -y \
 RUN a2enmod rewrite \
         && a2enmod ldap
         
-RUN service mysql start
+RUN chown -R mysql:mysql /var/lib/mysql \
+        && service mysql start
 
 RUN echo exit 0 > /usr/sbin/policy-rc.d
 
@@ -57,10 +58,10 @@ RUN sed -i '/controluser/s/^\/\///g' /etc/phpmyadmin/config.inc.php \
         && sed -i "/DefaultDisplay/s/'vertical'/'horizontal'/g" /etc/phpmyadmin/config.inc.php
 
 #RUN service mysql start
-RUN        mysql --user=root --password=$MYSQL_ROOT_PASSWORD -e "GRANT SELECT, INSERT, DELETE, UPDATE ON phpmyadmin.* TO 'pma'@'localhost' IDENTIFIED BY '$PMA_USER_PASSWORD'" \
+RUN mysql --user=root --password=$MYSQL_ROOT_PASSWORD -e "GRANT SELECT, INSERT, DELETE, UPDATE ON phpmyadmin.* TO 'pma'@'localhost' IDENTIFIED BY '$PMA_USER_PASSWORD'" \
         && mysql --user=root --password=$MYSQL_ROOT_PASSWORD -e "GRANT SELECT, INSERT, DELETE, UPDATE ON gris_model.* TO 'gris'@'localhost' IDENTIFIED BY '$GRIS_DB_USER_PASSWORD'"
 
-RUN apt install -y slapd ldap-utils
+RUN apt-get install -y slapd ldap-utils
 
 RUN  ulimit -n 1024 \
         && echo "slapd slapd/root_password password $LDAP_ROOT_PASSWORD" | debconf-set-selections \
