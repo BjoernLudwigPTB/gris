@@ -34,12 +34,9 @@ RUN a2enmod rewrite \
 RUN chown -R mysql:mysql /var/lib/mysql \
         && service mysql start
 
-RUN echo exit 0 > /usr/sbin/policy-rc.d
-
 RUN apt-get install -y \ 
         phpldapadmin \
 		phpmyadmin
-        
         
 RUN echo "phpmyadmin phpmyadmin/dbconfig-install boolean true" | debconf-set-selections \
         && echo "phpmyadmin phpmyadmin/app-password-confirm password $MYSQL_ROOT_PASSWORD" | debconf-set-selections \
@@ -57,9 +54,12 @@ RUN sed -i '/controluser/s/^\/\///g' /etc/phpmyadmin/config.inc.php \
         && sed -i "/controlpass/s/= '.*'/= '$PMA_USER_PASSWORD'/" /etc/phpmyadmin/config.inc.php \
         && sed -i "/DefaultDisplay/s/'vertical'/'horizontal'/g" /etc/phpmyadmin/config.inc.php
 
-#RUN service mysql start
+RUN service mysql start
+
 RUN mysql --user=root --password=$MYSQL_ROOT_PASSWORD -e "GRANT SELECT, INSERT, DELETE, UPDATE ON phpmyadmin.* TO 'pma'@'localhost' IDENTIFIED BY '$PMA_USER_PASSWORD'" \
         && mysql --user=root --password=$MYSQL_ROOT_PASSWORD -e "GRANT SELECT, INSERT, DELETE, UPDATE ON gris_model.* TO 'gris'@'localhost' IDENTIFIED BY '$GRIS_DB_USER_PASSWORD'"
+
+RUN echo exit 0 > /usr/sbin/policy-rc.d
 
 RUN apt-get install -y slapd ldap-utils
 
