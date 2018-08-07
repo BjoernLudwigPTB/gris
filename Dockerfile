@@ -99,4 +99,4 @@ RUN sed -i "s|$(grep -i 'DocumentRoot' /etc/apache2/sites-enabled/000-default.co
 
 RUN chown -R www-data:www-data /var/www/gris
 
-ENTRYPOINT service apache2 start && service mysql start && ulimit -n 1024 && service slapd start && /bin/bash
+ENTRYPOINT service apache2 start && chown -R mysql:mysql /var/lib/mysql && service mysql start && ulimit -n 1024 && service slapd start && /bin/bash
