@@ -1,73 +1,75 @@
 FROM debian:8.9
 
-MAINTAINER Bjoern Ludwig <bjoern.ludwig@ptb.de>
+Label maintainer="Bjoern Ludwig <bjoern.ludwig@ptb.de>"
 
 ENV DEBIAN_FRONTEND=noninteractive
 
-ARG MYSQL_ROOT_PASSWORD=password
-ARG LDAP_ROOT_PASSWORD=password
-ARG PMA_USER_PASSWORD=password
-ARG GRIS_DB_USER_PASSWORD=password
-ARG LDAP_DOMAIN=password
+ARG MYSQL_ROOT_PASSWORD=passwd
+ARG LDAP_ROOT_PASSWORD=passwd
+ARG PMA_USER_PASSWORD=passwd
+ARG GRIS_DB_USER_PASSWORD=passwd
+ARG LDAP_DOMAIN=passwd
 
 RUN echo "Europe/Berlin" > /etc/timezone \
-	&& dpkg-reconfigure -f noninteractive tzdata
-	
-RUN echo "deb http://ftp.halifax.rwth-aachen.de/debian/ jessie main"> /etc/apt/sources.list
+        && dpkg-reconfigure -f noninteractive tzdata
+        
+RUN echo "deb http://ftp.halifax.rwth-aachen.de/debian/ jessie main" > /etc/apt/sources.list
 
 RUN echo "mysql-server mysql-server/root_password password $MYSQL_ROOT_PASSWORD" | debconf-set-selections \
-	&& echo "mysql-server mysql-server/root_password_again password $MYSQL_ROOT_PASSWORD" | debconf-set-selections 
+        && echo "mysql-server mysql-server/root_password_again password $MYSQL_ROOT_PASSWORD" | debconf-set-selections 
 
-RUN apt-get update && apt install -y \
-	git \
-	vim \
-	apache2 \
-	php5 \
-	php5-ldap \
-	php5-mysqlnd \
-	libapache2-mod-php5 \ 
-	mysql-server 
+RUN apt-get update && apt-get install -y \
+        git \
+        vim \
+        apache2 \
+        php5 \
+        php5-ldap \
+        php5-mysqlnd \
+        libapache2-mod-php5 \ 
+        mysql-server 
 
 RUN a2enmod rewrite \
-	&& a2enmod ldap
-	
+        && a2enmod ldap
+        
 RUN service mysql start
 
-RUN apt install -y \ 
-	phpmyadmin \
-	phpldapadmin
-	
+RUN echo exit 0 > /usr/sbin/policy-rc.d
+
+RUN apt-get install -y \ 
+        phpldapadmin \
+		phpmyadmin
+        
+        
 RUN echo "phpmyadmin phpmyadmin/dbconfig-install boolean true" | debconf-set-selections \
-	&& echo "phpmyadmin phpmyadmin/app-password-confirm password $MYSQL_ROOT_PASSWORD" | debconf-set-selections \
-	&& echo "phpmyadmin phpmyadmin/mysql/admin-pass password $MYSQL_ROOT_PASSWORD" | debconf-set-selections \
-	&& echo "phpmyadmin phpmyadmin/mysql/app-pass password $MYSQL_ROOT_PASSWORD" | debconf-set-selections \
-	&& echo "phpmyadmin phpmyadmin/reconfigure-webserver multiselect apache2" | debconf-set-selections \
-	&& dpkg-reconfigure phpmyadmin
+        && echo "phpmyadmin phpmyadmin/app-password-confirm password $MYSQL_ROOT_PASSWORD" | debconf-set-selections \
+        && echo "phpmyadmin phpmyadmin/mysql/admin-pass password $MYSQL_ROOT_PASSWORD" | debconf-set-selections \
+        && echo "phpmyadmin phpmyadmin/mysql/app-pass password $MYSQL_ROOT_PASSWORD" | debconf-set-selections \
+        && echo "phpmyadmin phpmyadmin/reconfigure-webserver multiselect apache2" | debconf-set-selections \
+        && dpkg-reconfigure phpmyadmin
 
 RUN gunzip -c /usr/share/doc/phpmyadmin/examples/create_tables.sql.gz | mysql --protocol=TCP  --user=root --password=$MYSQL_ROOT_PASSWORD \
-	&& gunzip -c /usr/share/doc/phpmyadmin/examples/config.sample.inc.php.gz > /etc/phpmyadmin/config.inc.php
+        && gunzip -c /usr/share/doc/phpmyadmin/examples/config.sample.inc.php.gz > /etc/phpmyadmin/config.inc.php
 
 RUN sed -i '/controluser/s/^\/\///g' /etc/phpmyadmin/config.inc.php \
-	&& sed -i '/controlpass/s/^\/\///g' /etc/phpmyadmin/config.inc.php \
-	&& sed -i '/[Servers]/s/^\/\///g' /etc/phpmyadmin/config.inc.php \
-	&& sed -i "/controlpass/s/= '.*'/= '$PMA_USER_PASSWORD'/" /etc/phpmyadmin/config.inc.php \
-	&& sed -i "/DefaultDisplay/s/'vertical'/'horizontal'/g" /etc/phpmyadmin/config.inc.php
+        && sed -i '/controlpass/s/^\/\///g' /etc/phpmyadmin/config.inc.php \
+        && sed -i '/[Servers]/s/^\/\///g' /etc/phpmyadmin/config.inc.php \
+        && sed -i "/controlpass/s/= '.*'/= '$PMA_USER_PASSWORD'/" /etc/phpmyadmin/config.inc.php \
+        && sed -i "/DefaultDisplay/s/'vertical'/'horizontal'/g" /etc/phpmyadmin/config.inc.php
 
 #RUN service mysql start
-RUN	mysql --user=root --password=$MYSQL_ROOT_PASSWORD -e "GRANT SELECT, INSERT, DELETE, UPDATE ON phpmyadmin.* TO 'pma'@'localhost' IDENTIFIED BY '$PMA_USER_PASSWORD'" \
-	&& mysql --user=root --password=$MYSQL_ROOT_PASSWORD -e "GRANT SELECT, INSERT, DELETE, UPDATE ON gris_model.* TO 'gris'@'localhost' IDENTIFIED BY '$GRIS_DB_USER_PASSWORD'"
+RUN        mysql --user=root --password=$MYSQL_ROOT_PASSWORD -e "GRANT SELECT, INSERT, DELETE, UPDATE ON phpmyadmin.* TO 'pma'@'localhost' IDENTIFIED BY '$PMA_USER_PASSWORD'" \
+        && mysql --user=root --password=$MYSQL_ROOT_PASSWORD -e "GRANT SELECT, INSERT, DELETE, UPDATE ON gris_model.* TO 'gris'@'localhost' IDENTIFIED BY '$GRIS_DB_USER_PASSWORD'"
 
 RUN apt install -y slapd ldap-utils
 
-RUN echo exit 0 > /usr/sbin/policy-rc.d \
-    && ulimit -n 1024 \
-	&& echo "slapd slapd/root_password password $LDAP_ROOT_PASSWORD" | debconf-set-selections \
-	&& echo "slapd slapd/root_password_again password $LDAP_ROOT_PASSWORD" | debconf-set-selections \
-	&& echo "slapd slapd/internal/adminpw password $LDAP_ROOT_PASSWORD" | debconf-set-selections \
-	&& echo "slapd slapd/internal/generated_adminpw password $LDAP_ROOT_PASSWORD" | debconf-set-selections \
-	&& echo "slapd slapd/password2 password $LDAP_ROOT_PASSWORD" | debconf-set-selections \
-	&& echo "slapd slapd/password1 password $LDAP_ROOT_PASSWORD" | debconf-set-selections \
-	&& dpkg-reconfigure slapd
+RUN  ulimit -n 1024 \
+        && echo "slapd slapd/root_password password $LDAP_ROOT_PASSWORD" | debconf-set-selections \
+        && echo "slapd slapd/root_password_again password $LDAP_ROOT_PASSWORD" | debconf-set-selections \
+        && echo "slapd slapd/internal/adminpw password $LDAP_ROOT_PASSWORD" | debconf-set-selections \
+        && echo "slapd slapd/internal/generated_adminpw password $LDAP_ROOT_PASSWORD" | debconf-set-selections \
+        && echo "slapd slapd/password2 password $LDAP_ROOT_PASSWORD" | debconf-set-selections \
+        && echo "slapd slapd/password1 password $LDAP_ROOT_PASSWORD" | debconf-set-selections \
+        && dpkg-reconfigure slapd
 
 RUN sed -i "/'base'/s/dc=example,dc=com/dc=$LDAP_DOMAIN/" /etc/phpldapadmin/config.php \
 && sed -i "/'bind_id'/s/cn=admin,dc=example,dc=com/cn=admin,dc=$LDAP_DOMAIN/" /etc/phpldapadmin/config.php \
