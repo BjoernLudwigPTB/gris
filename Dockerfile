@@ -28,6 +28,8 @@ RUN apt-get update && apt-get install -y \
         php5-mysqlnd \
         libapache2-mod-php5 \ 
         mysql-server 
+		
+RUN chmod a+r /var/lib/php5/sessions/
 
 RUN a2enmod rewrite \
         && a2enmod ldap
@@ -95,8 +97,6 @@ RUN ulimit -n 1024 && service slapd start \
     && ldapadd -Q -Y EXTERNAL -H ldapi:/// -f /tmp/disable_anon_bind.ldif -w $LDAP_ROOT_PASSWORD; exit 0
 
 RUN sed -i "s|$(grep -i 'DocumentRoot' /etc/apache2/sites-enabled/000-default.conf | cut -d' ' -f2)|/var/www/gris|" /etc/apache2/sites-enabled/000-default.conf
-
-RUN chown -R www-data:www-data /var/www/gris
 
 USER root
 
