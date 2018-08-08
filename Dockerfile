@@ -82,7 +82,7 @@ COPY database/schema.sql /tmp/schema.sql
 
 RUN git clone https://git.gesis.org/gris/gris-ose.git /var/www/gris \
     && chown -R www-data:www-data /var/www/gris \
-    && sed -i "s/test123/$GRIS_DB_USER_PASSWORD/g" /var/www/gris/init/gris_init_example.inc
+    && sed -i "s/test123/$GRIS_DB_USER_PASSWORD/g" /var/www/gris/init/gris_init_example.inc \
     && sed -i 's/$gris_init_dbhost.":".$gris_init_dbport/\$gris_init_dbhost/g' /var/www/gris/classes/GRIS_DATABASE.php
 
 RUN chown -R mysql:mysql /var/lib/mysql \
