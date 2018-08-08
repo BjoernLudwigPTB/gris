@@ -1,6 +1,6 @@
 FROM debian:8.9
 
-Label maintainer="Bjoern Ludwig <bjoern.ludwig@ptb.de>"
+LABEL maintainer="Bjoern Ludwig <bjoern.ludwig@ptb.de>"
 
 ENV DEBIAN_FRONTEND=noninteractive
 
@@ -12,8 +12,9 @@ ARG LDAP_DOMAIN=ldapdomain
 
 RUN echo "Europe/Berlin" > /etc/timezone \
         && dpkg-reconfigure -f noninteractive tzdata
-        
-RUN echo "deb http://ftp.halifax.rwth-aachen.de/debian/ jessie main" > /etc/apt/sources.list
+
+RUN echo "deb http://ftp.halifax.rwth-aachen.de/debian/ jessie main" > /etc/apt/sources.list \
+        && echo exit 0 > /usr/sbin/policy-rc.d
 
 RUN echo "mysql-server mysql-server/root_password password $MYSQL_ROOT_PASSWORD" | debconf-set-selections \
         && echo "mysql-server mysql-server/root_password_again password $MYSQL_ROOT_PASSWORD" | debconf-set-selections 
@@ -33,8 +34,6 @@ RUN a2enmod rewrite \
         
 RUN chown -R mysql:mysql /var/lib/mysql \
         && service mysql start
-
-RUN echo exit 0 > /usr/sbin/policy-rc.d
 
 RUN apt-get install -y \ 
         phpldapadmin \
