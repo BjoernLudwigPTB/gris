@@ -31,13 +31,12 @@ RUN apt-get update && apt-get install -y \
 
 RUN a2enmod rewrite \
         && a2enmod ldap
-        
-RUN chown -R mysql:mysql /var/lib/mysql \
-        && service mysql start
 
-RUN apt-get install -y \ 
+RUN chown -R mysql:mysql /var/lib/mysql \
+        && service mysql start \
+        && apt-get install -y \ 
         phpldapadmin \
-		phpmyadmin
+        phpmyadmin
         
 RUN echo "phpmyadmin phpmyadmin/dbconfig-install boolean true" | debconf-set-selections \
         && echo "phpmyadmin phpmyadmin/app-password-confirm password $MYSQL_ROOT_PASSWORD" | debconf-set-selections \
