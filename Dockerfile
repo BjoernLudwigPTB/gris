@@ -31,9 +31,6 @@ RUN apt-get update && apt-get install -y \
 
 RUN a2enmod rewrite \
         && a2enmod ldap
-
-RUN echo -e "[mysqladmin]\nuser=root\npassword=$MYSQL_ROOT_PASSWORD" > /root/.my.cnf \
-        %% chmod 0400 /root/.my.cnf
 		
 RUN chown -R mysql:mysql /var/lib/mysql \
         && service mysql start \
