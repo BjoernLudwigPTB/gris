@@ -17,9 +17,7 @@ RUN echo "deb http://ftp.halifax.rwth-aachen.de/debian/ jessie main" > /etc/apt/
         && echo exit 0 > /usr/sbin/policy-rc.d
 
 RUN echo "mysql-server mysql-server/root_password password $MYSQL_ROOT_PASSWORD" | debconf-set-selections \
-        && echo "mysql-server mysql-server/root_password_again password $MYSQL_ROOT_PASSWORD" | debconf-set-selections \
-        && echo -e "[client]\nuser=root\npassword=$MYSQL_ROOT_PASSWORD" > /root/.my.cnf \
-        %% chmod 0400 /root/.my.cnf
+        && echo "mysql-server mysql-server/root_password_again password $MYSQL_ROOT_PASSWORD" | debconf-set-selections
 
 RUN apt-get update && apt-get install -y \
         git \
@@ -34,6 +32,9 @@ RUN apt-get update && apt-get install -y \
 RUN a2enmod rewrite \
         && a2enmod ldap
 
+RUN echo -e "[mysqladmin]\nuser=root\npassword=$MYSQL_ROOT_PASSWORD" > /root/.my.cnf \
+        %% chmod 0400 /root/.my.cnf
+		
 RUN chown -R mysql:mysql /var/lib/mysql \
         && service mysql start \
         && apt-get install -y \ 
