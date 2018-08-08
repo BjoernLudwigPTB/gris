@@ -83,6 +83,7 @@ COPY database/schema.sql /tmp/schema.sql
 RUN git clone https://git.gesis.org/gris/gris-ose.git /var/www/gris \
     && chown -R www-data:www-data /var/www/gris \
     && sed -i "s/test123/$GRIS_DB_USER_PASSWORD/g" /var/www/gris/init/gris_init_example.inc
+    && sed -i 's/$gris_init_dbhost.":".$gris_init_dbport/\$gris_init_dbhost/g' /var/www/gris/classes/GRIS_DATABASE.php
 
 RUN chown -R mysql:mysql /var/lib/mysql \
         && service mysql start \ 
@@ -96,5 +97,7 @@ RUN ulimit -n 1024 && service slapd start \
 RUN sed -i "s|$(grep -i 'DocumentRoot' /etc/apache2/sites-enabled/000-default.conf | cut -d' ' -f2)|/var/www/gris|" /etc/apache2/sites-enabled/000-default.conf
 
 RUN chown -R www-data:www-data /var/www/gris
+
+USER root
 
 ENTRYPOINT service apache2 start && chown -R mysql:mysql /var/lib/mysql && service mysql start && ulimit -n 1024 && service slapd start && /bin/bash
