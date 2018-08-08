@@ -8,7 +8,7 @@ ARG MYSQL_ROOT_PASSWORD=passwd
 ARG LDAP_ROOT_PASSWORD=passwd
 ARG PMA_USER_PASSWORD=passwd
 ARG GRIS_DB_USER_PASSWORD=passwd
-ARG LDAP_DOMAIN=ldapdomain
+ARG LDAP_DOMAIN=nodomain
 
 RUN echo "Europe/Berlin" > /etc/timezone \
         && dpkg-reconfigure -f noninteractive tzdata
