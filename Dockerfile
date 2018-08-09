@@ -29,7 +29,6 @@ RUN apt-get update && apt-get install -y \
         libapache2-mod-php5 \ 
         mysql-server 
 		
-#RUN chmod a+r /var/lib/php5/sessions/
 RUN chown -R www-data:www-data /var/lib/php5/
 
 RUN a2enmod rewrite \
@@ -79,7 +78,6 @@ RUN sed -i "/'base'/s/dc=example,dc=com/dc=$LDAP_DOMAIN/" /etc/phpldapadmin/conf
         && sed -i "/'bind_id'/s/cn=admin,dc=example,dc=com/cn=admin,dc=$LDAP_DOMAIN/" /etc/phpldapadmin/config.php \
         && sed -i "/hide_template_warning/s/^\/\///;/hide_template_warning/s/false/true/" /etc/phpldapadmin/config.php
 
-COPY ldap/base.ldif /tmp/base.ldif
 COPY ldap/disable_anon_bind.ldif /tmp/disable_anon_bind.ldif
 COPY database/schema.sql /tmp/schema.sql
 
@@ -94,7 +92,6 @@ RUN chown -R mysql:mysql /var/lib/mysql \
         && mysql --user=root --password=$MYSQL_ROOT_PASSWORD gris_model < /tmp/schema.sql 
 
 RUN ulimit -n 1024 && service slapd start \
-#    && ldapadd -x -c  -D cn=admin,dc=$LDAP_DOMAIN -w $LDAP_ROOT_PASSWORD -f /tmp/base.ldif; exit 0 \
     && ldapadd -Q -Y EXTERNAL -H ldapi:/// -f /tmp/disable_anon_bind.ldif -w $LDAP_ROOT_PASSWORD; exit 0
 
 RUN sed -i "s|$(grep -i 'DocumentRoot' /etc/apache2/sites-enabled/000-default.conf | cut -d' ' -f2)|/var/www/gris|" /etc/apache2/sites-enabled/000-default.conf
