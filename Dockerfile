@@ -94,7 +94,7 @@ RUN chown -R mysql:mysql /var/lib/mysql \
         && mysql --user=root --password=$MYSQL_ROOT_PASSWORD gris_model < /tmp/schema.sql 
 
 RUN ulimit -n 1024 && service slapd start \
-    && ldapadd -x -c  -D cn=admin,dc=$LDAP_DOMAIN -w $LDAP_ROOT_PASSWORD -f /tmp/base.ldif; exit 0 \
+#    && ldapadd -x -c  -D cn=admin,dc=$LDAP_DOMAIN -w $LDAP_ROOT_PASSWORD -f /tmp/base.ldif; exit 0 \
     && ldapadd -Q -Y EXTERNAL -H ldapi:/// -f /tmp/disable_anon_bind.ldif -w $LDAP_ROOT_PASSWORD; exit 0
 
 RUN sed -i "s|$(grep -i 'DocumentRoot' /etc/apache2/sites-enabled/000-default.conf | cut -d' ' -f2)|/var/www/gris|" /etc/apache2/sites-enabled/000-default.conf
