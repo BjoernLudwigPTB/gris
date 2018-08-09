@@ -29,7 +29,8 @@ RUN apt-get update && apt-get install -y \
         libapache2-mod-php5 \ 
         mysql-server 
 		
-RUN chmod a+r /var/lib/php5/sessions/
+#RUN chmod a+r /var/lib/php5/sessions/
+RUN chown -R www-data:www-data /var/lib/php5/
 
 RUN a2enmod rewrite \
         && a2enmod ldap
